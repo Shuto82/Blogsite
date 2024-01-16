@@ -20,17 +20,18 @@ const defaultTheme = createTheme();
 
 export const SignInUp = () => {
   const param = useParams();
-  console.log(param);
-  const {signUpUser} = useContext(UserContext);
+
+  const {signUpUser, signInUser} = useContext(UserContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    signUpUser(data.get('email'), data.get('password'))
+    
+    if (param.type == 'in') {
+      signInUser(data.get('email'), data.get('password'));
+    } else {    
+    signUpUser(data.get('email'), data.get('password'));
+  }
   };
 
   return (
@@ -49,7 +50,7 @@ export const SignInUp = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            {param.type == 'up' ? 'Sign up' : 'Sign in'}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -79,7 +80,7 @@ export const SignInUp = () => {
               sx={{ mt: 3, mb: 2 }}
             >
 
-              Sign up
+              {param.type == 'up' ? 'Sign up' : 'Sign in'}
             </Button>
             <Grid container>
               <Grid item xs>
