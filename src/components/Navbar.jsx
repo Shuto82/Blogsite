@@ -11,22 +11,37 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const pages = [
   { path: "/", name: "Kezdőoldal" },
-  { path: "about", name: "Rólam" },
-  { path: "create", name: "Poszt készítése" },
+  { path: "about", name: "Rólam" }  
 ];
-const settings = ["Profile", "Dashboard", "Logout"];
+const settings = [
+  { path: "profile", name: "Profil" },
+  { path: "/", name: "Kijelentkezés" },
+];
 
 export const Navbar = () => {
-  const {user, logOutUser} = useContext(UserContext)
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { user, logOutUser } = useContext(UserContext);
+  const [navPages, setNavPages] = useState(pages);
+
+
+  useEffect (() => {
+    if (user) {
+      setNavPages([...pages, { path: "create", name: "Poszt készítése" }])
+    }
+    else {setNavPages(pages)}
+  }, [user])
+
+  const navigate = useNavigate()
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -47,12 +62,11 @@ export const Navbar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/*<AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -64,7 +78,7 @@ export const Navbar = () => {
             }}
           >
             LOGO
-          </Typography>*/}
+          </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -80,22 +94,14 @@ export const Navbar = () => {
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
               keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
+              sx={{ display: { xs: "block", md: "none" } }}
             >
-              {pages.map((obj) => (
+              {navPages.map((obj) => (
                 <NavLink key={obj.name} to={obj.path}>
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{obj.name}</Typography>
@@ -105,28 +111,15 @@ export const Navbar = () => {
             </Menu>
           </Box>
 
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
+          {/* Laptop-kijelzős rész*/}
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((obj) => (
-              <NavLink key={obj.name} to={obj.path} className={({isActive}) => (isActive ? 'active' : '')}>
+            {navPages.map((obj) => (
+              <NavLink
+                key={obj.name}
+                to={obj.path}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{ color: "white", display: "block" }}
@@ -137,57 +130,69 @@ export const Navbar = () => {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-            <NavLink to='signinup/up' className={({isActive}) => (isActive ? 'active' : '')}>
-              <Button
-                onClick={handleCloseNavMenu}
-                sx={{ color: "white", display: "block" }}
-              >
-                Sign up
-              </Button>
-            </NavLink>
-          </Box>
+          {!user ? (
+            <>
+              <Box sx={{ flexGrow: 0, display: { md: "flex" } }}>
+                <NavLink
+                  to="signinup/up"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ color: "white", display: "block" }}
+                  >
+                    Feliratkozás
+                  </Button>
+                </NavLink>
+              </Box>
 
-          <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-            <NavLink to='signinup/in' className={({isActive}) => (isActive ? 'active' : '')}>
-              <Button
-                onClick={handleCloseNavMenu}
-                sx={{ color: "white", display: "block" }}
+              <Box sx={{ flexGrow: 0, display: { md: "flex" } }}>
+                <NavLink
+                  to="signinup/in"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ color: "white", display: "block" }}
+                  >
+                    Bejelentkezés
+                  </Button>
+                </NavLink>
+              </Box>
+            </>
+          ) : (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
               >
-                Sign in
-              </Button>
-            </NavLink>
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                {settings.map((obj) => (
+                  <MenuItem key={obj.name} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center" onClick={() => obj.name == 'Kijelentkezés' ? logOutUser() : navigate(obj.path)}>
+                      {obj.name}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

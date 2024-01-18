@@ -13,6 +13,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { UserContext } from '../context/UserContext';
 import { useParams } from 'react-router-dom';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Alerts } from '../components/Alerts';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -20,8 +22,9 @@ const defaultTheme = createTheme();
 
 export const SignInUp = () => {
   const param = useParams();
+  const navigate = useNavigate();
 
-  const {signUpUser, signInUser} = useContext(UserContext);
+  const {signUpUser, signInUser, msg} = useContext(UserContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -50,7 +53,7 @@ export const SignInUp = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            {param.type == 'up' ? 'Sign up' : 'Sign in'}
+            {param.type == 'up' ? 'Feliratkozás' : 'Bejelentkezés'}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -80,22 +83,18 @@ export const SignInUp = () => {
               sx={{ mt: 3, mb: 2 }}
             >
 
-              {param.type == 'up' ? 'Sign up' : 'Sign in'}
+              {param.type == 'up' ? 'Feliratkozás' : 'Bejelentkezés'}
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link component="button" variant="body2" onClick={() => navigate('/repass')}>
+                {param.type == 'in' ? 'Elfelejtetted a jelszavad?' : ''}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
+        {msg && <Alerts msg = {msg} severity = 'error' /> }
       </Container>
     </ThemeProvider>
   );
