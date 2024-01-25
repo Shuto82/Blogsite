@@ -1,22 +1,24 @@
 import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect } from 'react'
+import { useState } from 'react'
 import { createContext } from 'react'
-import { readCategories } from '../utilities/crudUtility';
+import { readCategories } from '../utilities/crudUtility'
 
-export const CategContext = createContext();
+export const CategContext=createContext()
 
-export const CategProvider = () => {
-    const [categories, setCategories] = useState(null);
+export const CategProvider = ({children}) => {
+    const [categories,setCategories]=useState([])
 
-    useEffect(() => {
-        readCategories(setCategories);
+    useEffect(()=>{
+        const unsubscribe=readCategories(setCategories)
+        return ()=>unsubscribe()
     },[])
-  
-    console.log(categories);
 
+console.log(categories);
 
   return (
-    <div></div>
+    <CategContext.Provider value={{categories}}>
+        {children}
+    </CategContext.Provider>
   )
 }

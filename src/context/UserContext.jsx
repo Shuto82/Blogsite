@@ -56,10 +56,8 @@ useEffect(() => {
         }
     }
 
-
-console.log(user);
   return (
-    <UserContext.Provider value={{user, signUpUser, logOutUser, signInUser, resetPassword, msg}}>
+    <UserContext.Provider value={{user, signUpUser, logOutUser, signInUser, resetPassword, msg, setMsg}}>
         {children}
     </UserContext.Provider>
 

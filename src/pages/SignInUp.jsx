@@ -15,8 +15,7 @@ import { useParams } from 'react-router-dom';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alerts } from '../components/Alerts';
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import { useEffect } from 'react';
 
 const defaultTheme = createTheme();
 
@@ -24,8 +23,14 @@ export const SignInUp = () => {
   const param = useParams();
   const navigate = useNavigate();
 
-  const {signUpUser, signInUser, msg} = useContext(UserContext);
+  const {signUpUser, signInUser, msg, setMsg} = useContext(UserContext);
 
+  useEffect(() => {
+    setMsg('');
+    document.querySelector('form').reset();
+  }, [param?.type])
+  
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
