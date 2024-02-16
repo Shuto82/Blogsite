@@ -14,6 +14,7 @@ import { Navbar } from "./components/Navbar";
 import { UserProvider } from "./context/UserContext";
 import { CategProvider } from "./context/CategContext";
 import { EditPost } from "./pages/EditPost";
+import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
   return (
@@ -40,7 +41,7 @@ function App() {
         </UserProvider>
       </BrowserRouter>
     </>
-  );
+  ); 
 }
 
 export default App;

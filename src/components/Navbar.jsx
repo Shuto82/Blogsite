@@ -20,7 +20,7 @@ import { useEffect } from "react";
 
 const pages = [
   { path: "/", name: "Kezdőoldal" },
-  { path: "about", name: "Rólam" }  
+  { path: "about", name: "Rólam" },
 ];
 const settings = [
   { path: "profile", name: "Profil" },
@@ -31,15 +31,15 @@ export const Navbar = () => {
   const { user, logOutUser } = useContext(UserContext);
   const [navPages, setNavPages] = useState(pages);
 
-
-  useEffect (() => {
+  useEffect(() => {
     if (user) {
-      setNavPages([...pages, { path: "create", name: "Poszt készítése" }])
+      setNavPages([...pages, { path: "create", name: "Poszt készítése" }]);
+    } else {
+      setNavPages(pages);
     }
-    else {setNavPages(pages)}
-  }, [user])
+  }, [user]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -185,7 +185,14 @@ export const Navbar = () => {
               >
                 {settings.map((obj) => (
                   <MenuItem key={obj.name} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center" onClick={() => obj.name == 'Kijelentkezés' ? logOutUser() : navigate(obj.path)}>
+                    <Typography
+                      textAlign="center"
+                      onClick={() =>
+                        obj.name == "Kijelentkezés"
+                          ? logOutUser()
+                          : navigate(obj.path)
+                      }
+                    >
                       {obj.name}
                     </Typography>
                   </MenuItem>

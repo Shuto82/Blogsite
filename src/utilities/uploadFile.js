@@ -5,11 +5,11 @@ import {
   getDownloadURL,
 
 } from "firebase/storage";
-//import { v4 as uuidv4 } from "uuid";
+import { v4 } from "uuid";
 
 export const uploadFile = async (file) => {
   try {
-    const fileRef = ref(storage, `uploads/abc + file.name.slice(-4)`);
+    const fileRef = ref(storage, `uploads/${v4() + file.name.slice(-4)}`);
     await uploadBytes(fileRef, file);
     const photoUrl = await getDownloadURL(fileRef);
     return photoUrl;

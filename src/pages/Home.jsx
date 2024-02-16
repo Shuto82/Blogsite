@@ -13,7 +13,7 @@ export const Home = () => {
         <Categories setSelectedCateg={setSelectedCateg} selectedCateg= {selectedCateg} />
       </div>
       <div className='posts'>
-        <Posts />
+        <Posts selectedCateg={selectedCateg} />
       </div>
     </div>
   )

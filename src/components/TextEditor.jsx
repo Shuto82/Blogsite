@@ -12,6 +12,5 @@ export const TextEditor = ({story,setStory}) => {
 console.log(value.toString('html'));
 console.log(story,value);
 
-  return <RichTextEditor value={value} onChange={onChange}   />;
+  return <RichTextEditor value={value} onChange={onChange} />;
 };
-

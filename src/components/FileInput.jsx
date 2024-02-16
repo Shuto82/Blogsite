@@ -41,7 +41,7 @@ console.log(err);
       />
       <label htmlFor="select-image">
         <Button variant="contained" color="info" sx={{margin:1}}component="span" >
-          select Image
+          Válassz képet
         </Button>
       </label>
       {imageUrl && selectedImage && (
@@ -54,4 +54,3 @@ console.log(err);
     </Box>
   );
 };
-

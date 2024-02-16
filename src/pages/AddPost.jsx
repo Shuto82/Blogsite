@@ -17,6 +17,8 @@ import { TextEditor } from "../components/TextEditor";
 import { FileInput } from "../components/FileInput";
 import { uploadFile } from "../utilities/uploadFile";
 import { addPost } from "../utilities/crudUtility";
+import { Loader } from "../components/Loader";
+import { Alerts } from "../components/Alerts";
 
 export const AddPost = () => {
   const { user } = useContext(UserContext);
@@ -25,6 +27,8 @@ export const AddPost = () => {
   const [title, setTitle] = useState("");
   const [story, setStory] = useState("");
   const [image, setImage] = useState(null);
+  const [uploaded, setUploaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!user) return <NotFound />;
 
@@ -32,23 +36,26 @@ export const AddPost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const photoUrl = await uploadFile(image);
       await addPost({
-        title, 
-        category: categ, 
-        photoUrl, 
-        author: user.displayName, 
-        userId: user.uid, 
-        description: story, 
-        likes: [], 
-        likeCount: 0})
+        title,
+        category: categ,
+        photoUrl,
+        author: user.displayName,
+        userId: user.uid,
+        description: story,
+        likes: [],
+        likeCount: 0,
+      });
+      setUploaded(true);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
-    catch(err) {
-console.log(err);
-    }
-  }
-
+  };
 
   return (
     <div className="createPost">
@@ -62,7 +69,7 @@ console.log(err);
         noValidate
         autoComplete="off"
       >
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+        <Box className='d-flex w-100 p-2'>
           <TextField
             id="outlined-basic"
             label="Poszt címe"
@@ -71,7 +78,7 @@ console.log(err);
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <FormControl fullWidth>
+          <FormControl>
             <InputLabel id="demo-simple-select-label">Kategóriák</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -94,8 +101,18 @@ console.log(err);
           <TextEditor story={story} setStory={setStory} />
         </FormControl>
         <FileInput setImage={setImage} />
-        <Button type="submit" disabled={title.length == 0 || categ == 0 || story.length == 0 || !image} variant="contained">Contained</Button>
+        <Button
+          type="submit"
+          disabled={
+            title.length == 0 || categ == 0 || story.length == 0 || !image
+          }
+          variant="contained"
+        >
+          Feltöltés
+        </Button>
       </Box>
+      {loading && <Loader />}
+      {uploaded && <Alerts msg="Sikeres mentés!" severity="success" />}
     </div>
   );
 };

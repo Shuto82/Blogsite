@@ -10,7 +10,7 @@ export const Categories = ({selectedCateg, setSelectedCateg}) => {
 
   return (
     <div>
-<Stack direction="row" spacing={1}>
+<Stack direction="row" spacing={1} sx={{flexWrap: 'wrap', justifyContent: 'center', gap: 5}}>
 <Typography>
 Kategóriák
 </Typography>
